@@ -35,7 +35,7 @@ an incredible python package
     keywords='',
     author='Emanuel Feld',
     author_email='elefbet@gmail.com',
-    url='https://github.com/18f/orgwide',
+    url='https://github.com/dcgov/orgwide',
     license='MIT',
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -51,6 +51,7 @@ an incredible python package
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
+        'requests'
         # add your dependencies here
         # remember to use 'package-name>=x.y.z,<x.y+1.0' notation (this way you get bugfixes)
     ],

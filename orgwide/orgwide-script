@@ -45,4 +45,4 @@ for var in "$@"; do
 done
 
 # Send to subcommand
-eval "${CMD-cli}/bin/{CMD}-${SUB} ${ARGS}"
+eval "${CMD}-cli/bin/${CMD}-${SUB} ${ARGS}"
