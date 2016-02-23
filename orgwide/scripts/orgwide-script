@@ -3,34 +3,6 @@
 CMD=$(basename $0)
 ARGS=""
 
-# # Convert known long options to short options
-# for arg in "$@"; do
-#   shift
-#   case "$arg" in
-#     "--help") set -- "$@" "-h" ;;
-#     *)        set -- "$@" "$arg"
-#   esac
-# done
-
-# # Reset to beginning of arguments
-# OPTIND=1
-
-# # Process option flags
-# while getopts ":h" opt; do
-# 	case "$opt" in
-# 		h )
-# 			usage
-# 			exit 0
-# 			;;
-# 		\? )
-# 			echo "Unrecognized option: -$OPTARG\n"
-# 			usage
-# 			exit 1
-# 			;;
-# 	esac
-# done
-# shift $((OPTIND -1))
-
 # Find subcommands and subcommand arguments
 SUB=$1; shift
 for var in "$@"; do
@@ -42,5 +14,8 @@ for var in "$@"; do
 	fi
 done
 
-# Send to subcommand
-eval "${CMD-cli}/bin/{CMD}-${SUB} ${ARGS}"
+if [[ "${SUB}" ]]; then
+	eval "~/.orgwide/${CMD}-cli/bin/${SUB} ${ARGS}"
+else
+	echo "No subcommand provided"
+fi
