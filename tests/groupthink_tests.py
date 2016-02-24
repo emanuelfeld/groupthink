@@ -15,7 +15,6 @@ from nose.tools import *
 
 from groupthink import __version__
 from groupthink.commands import *
-import subprocess
 
 if sys.version_info[:2] < (3, 0):
     from StringIO import StringIO
@@ -24,53 +23,54 @@ else:
 
 
 def setUp():
-    global home, dot
+    global home, repo_dir
     home = os.path.expanduser('~')
-    dot = '{}/.groupthink-test'.format(home)
-    execute_cmd(['mkdir', '-p', dot])
+    repo_dir = '{}/.groupthink-test'.format(home)
+    execute_cmd(['mkdir', '-p', repo_dir])
 
 
 def tearDown():
-    execute_cmd(['rm', '-rf', dot])
+    execute_cmd(['rm', '-rf', repo_dir])
 
 
 def test_has_proper_version():
-    eq_(__version__, '0.1.0')
+    eq_(__version__, '0.1.1')
 
 
-def test_installs_command():
-    install('dcgov', prefix=dot, dot=dot)
-    eq_(os.path.exists('{}/dcgov-cli'.format(dot)), True)
-    eq_(os.path.exists('{}/dcgov'.format(dot)), True)
+def test_installs():
+    install('dcgov', script_dir=repo_dir, repo_dir=repo_dir)
+    eq_(os.path.exists('{}/dcgov-cli'.format(repo_dir)), True)
+    eq_(os.path.exists('{}/dcgov'.format(repo_dir)), True)
 
 
-def test_update_command():
-    out = StringIO()
-    update('dcgov', out=out, prefix=dot, dot=dot)
-    output = out.getvalue().strip()
+def test_installed_orgs():
+    installed = installed_orgs(repo_dir=repo_dir)
+    eq_('dcgov' in installed, True)
+    eq_('18f' in installed, False)
+
+
+def test_execute_cmd():
+    (out, err) = execute_cmd(['echo', 'hello'])
+    eq_(out.find('hello') == 0, True)
+    eq_(err, '')
+
+
+def test_update():
+    output = update('dcgov', script_dir=repo_dir, repo_dir=repo_dir)
     eq_(output, 'Your dcgov command is already up to date.')
-    sys.stdout.flush()
 
 
-def test_upgrades_command():
-    out = StringIO()
-    upgrade('dcgov', out=out, prefix=dot, dot=dot)
-    output = out.getvalue().strip()
+def test_upgrades():
+    output = upgrade('dcgov', script_dir=repo_dir, repo_dir=repo_dir)
     eq_(output, 'Your dcgov command is already up to date.')
-    sys.stdout.flush()
 
 
-def test_lists_command():
-    out = StringIO()
-    list_orgs(out=out, prefix=dot, dot=dot)
-    output = out.getvalue().strip()
+def test_lists():
+    output = list_orgs(repo_dir=repo_dir)
     eq_(output.find('- dcgov') > -1, True)
-    sys.stdout.flush()
 
 
-def test_uninstalls_command():
-    out = StringIO()
-    uninstall('dcgov', out=out, prefix=dot, dot=dot)
-    eq_(os.path.exists('{}/dcgov-cli'.format(dot)), False)
-    eq_(os.path.exists('{}/dcgov'.format(dot)), False)
-    sys.stdout.flush()
+def test_uninstalls():
+    uninstall('dcgov', script_dir=repo_dir, repo_dir=repo_dir)
+    eq_(os.path.exists('{}/dcgov-cli'.format(repo_dir)), False)
+    eq_(os.path.exists('{}/dcgov'.format(repo_dir)), False)
