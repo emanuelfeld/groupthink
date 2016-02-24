@@ -10,4 +10,4 @@
 # Universal public domain dedication.
 
 
-__version__ = '0.1.0'  # NOQA
+__version__ = '0.1.1'  # NOQA
