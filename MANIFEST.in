@@ -9,3 +9,4 @@
 
 recursive-exclude tests *
 include groupthink/scripts/*
+include *.rst *.md tox.ini

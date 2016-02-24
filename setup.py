@@ -16,18 +16,6 @@ from groupthink import __version__
 with open('README.rst') as file:
     long_description = file.read()
 
-tests_require = [
-    'mock',
-    'nose',
-    'coverage',
-    'yanc',
-    'preggy',
-    'tox',
-    'ipdb',
-    'coveralls',
-    'sphinx',
-]
-
 setup(
     name='groupthink',
     version=__version__,
@@ -51,9 +39,8 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[],
-    extras_require={
-        'tests': tests_require,
-    },
+    test_suite='nose.collector',
+    tests_require=['nose-progressive'],
     entry_points={
         'console_scripts': [
             'groupthink=groupthink.commands:main',
