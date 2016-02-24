@@ -26,13 +26,14 @@ You can check for updates made to the remote :code:`foo-cli` repository with :co
 
 Finally, you can list all the organization commands you have installed to :code:`~/.groupthink` with :code:`groupthink --list`.
 
-To sum up the subcommands:
+To sum up the options:
 
 * :code:`groupthink --install <org>` installs the scripts for :code:`<org>`
 * :code:`groupthink --uninstall <org>` removes the scripts for :code:`<org>`
 * :code:`groupthink --update <org>` checks for updates made to :code:`<org>`'s scripts
 * :code:`groupthink --upgrade <org>` installs all updates made to :code:`<org>`'s scripts
 * :code:`groupthink --list` lists all groupthink scripts you have installed for any :code:`<org>`
+* :code:`groupthink --install <altname> --alias <org>` install the scripts for :code:`<org>` under :code:`<altname>` (if you use this, replace :code:`<org>` with :code:`<altname>` in the options above)
 
 Requirements
 ==============
