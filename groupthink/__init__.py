@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# This file is part of orgwide.
-# https://github.com/18f/orgwide
+# This file is part of groupthink.
+# https://github.com/dcgov/groupthink
 
 # This project is in the public domain within the United States.
 # Additionally, the Government of the District of Columbia waives
@@ -10,4 +10,4 @@
 # Universal public domain dedication.
 
 
-from orgwide.version import __version__  # NOQA
+from groupthink.version import __version__  # NOQA

@@ -5,12 +5,12 @@ import argparse
 
 prefix = '/usr/local/bin'
 home = os.path.expanduser('~')
-dot = '{}/.orgwide'.format(home)
+dot = '{}/.groupthink'.format(home)
 
 
 def install(org):
-    # install organization scripts repository in ~/.orgwide
-    # and add orgwide script to /usr/local/bin
+    # install organization scripts repository in ~/.groupthink
+    # and add groupthink script to /usr/local/bin
     check_install(org, check_already=False)
     try:
         execute_cmd(['mkdir', '-p', dot])
@@ -19,17 +19,17 @@ def install(org):
         (out, err) = execute_cmd(['git', 'clone', repo_url, repo_dest])
         if err.find('fatal: ') > 0:
             sys.exit(1)
-        orgwide_script = os.path.dirname(os.path.realpath(__file__)) + '/scripts/orgwide-script'
-        orgwide_dest = '{}/{}'.format(prefix, org)
-        execute_cmd(['rm', orgwide_dest])
-        execute_cmd(['cp', '-p', orgwide_script, orgwide_dest])
+        groupthink_script = os.path.dirname(os.path.realpath(__file__)) + '/scripts/groupthink-script'
+        groupthink_dest = '{}/{}'.format(prefix, org)
+        execute_cmd(['rm', groupthink_dest])
+        execute_cmd(['cp', '-p', groupthink_script, groupthink_dest])
         print('Installed {} command'.format(org))
     except:
         print("Could not get {0}-cli command. Please make sure https://github.com/{0}/{0}-cli exists".format(org))
 
 
 def uninstall(org):
-    # remove organization scripts repo and orgwide script
+    # remove organization scripts repo and groupthink script
     check_install(org)
     execute_cmd(['rm', '-rf', '{0}/{1}-cli'.format(dot, org)])
     execute_cmd(['rm', '{0}/{1}'.format(prefix, org)])
@@ -43,7 +43,7 @@ def update(org):
     (out, err) = execute_cmd(update_cmd)
     if out:
         print("There are updates to the {0} command. To install them, run:\n".format(org))
-        print("  orgwide --upgrade {0}".format(org))
+        print("  groupthink --upgrade {0}".format(org))
     else:
         print("Your {0} command is already up to date.".format(org))
 
@@ -67,7 +67,7 @@ def list_orgs():
             print("  - " + org.split('-')[0])
     else:
         print("You haven't installed any scripts. Install one with:\n")
-        print("  orgwide --install <org>")
+        print("  groupthink --install <org>")
 
 
 def installed_orgs():
@@ -75,15 +75,15 @@ def installed_orgs():
 
 
 def check_install(org, check_already=True):
-    # check if org-cli repo already installed in ~/.orgwide
+    # check if org-cli repo already installed in ~/.groupthink
     installed = "{}-cli".format(org) in installed_orgs()
     if not installed and check_already:
         print("Error: {0} command not installed. You can try to install it with:\n".format(org))
-        print("  orgwide --install {0}".format(org))
+        print("  groupthink --install {0}".format(org))
         sys.exit(1)
     elif installed and not check_already:
         print("Error: {0} command already installed. You can check for updates with:\n".format(org))
-        print("  orgwide --update {0}".format(org))
+        print("  groupthink --update {0}".format(org))
         sys.exit(1)
 
 
@@ -93,7 +93,7 @@ def execute_cmd(cmd):
 
 
 def main():
-    parser = argparse.ArgumentParser(prog='orgwide', description="""Install a GitHub organization's CLI scripts. Given an 
+    parser = argparse.ArgumentParser(prog='groupthink', description="""Install a GitHub organization's CLI scripts. Given an 
         organization name, <org>, this package looks for and install the scripts contained in a repository with the name 
         <org>-cli.""")
     parser.add_argument('--install', '-i', action='store', dest='install', help="Provided a GitHub organization name, installs that organization's CLI scripts.")

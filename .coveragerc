@@ -1,5 +1,5 @@
-# This file is part of orgwide.
-# https://github.com/18f/orgwide
+# This file is part of groupthink.
+# https://github.com/dcgov/groupthink
 
 # This project is in the public domain within the United States.
 # Additionally, the Government of the District of Columbia waives
@@ -12,7 +12,7 @@ omit =
     *tests.py
 branch = True
 source =
-    orgwide
+    groupthink
 
 [report]
 exclude_lines =

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# This file is part of orgwide.
-# https://github.com/18f/orgwide
+# This file is part of groupthink.
+# https://github.com/dcgov/groupthink
 
 # This project is in the public domain within the United States.
 # Additionally, the Government of the District of Columbia waives
@@ -11,7 +11,10 @@
 
 
 from setuptools import setup, find_packages
-from orgwide import __version__
+from groupthink import __version__
+
+with open('README.rst') as file:
+    long_description = file.read()
 
 tests_require = [
     'mock',
@@ -26,23 +29,20 @@ tests_require = [
 ]
 
 setup(
-    name='orgwide',
+    name='groupthink',
     version=__version__,
-    description='an incredible python package',
-    long_description='''
-an incredible python package
-''',
-    keywords='',
+    description='Install, update, and manage GitHub organization-specific command line scripts',
+    long_description=long_description,
+    keywords='git cli console github',
     author='Emanuel Feld',
     author_email='elefbet@gmail.com',
-    url='https://github.com/dcgov/orgwide',
-    license='MIT',
+    url='https://github.com/dcgov/groupthink',
+    license='CC0-1.0',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
+        'License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
         'Natural Language :: English',
-        'Operating System :: Unix',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
@@ -50,18 +50,13 @@ an incredible python package
     ],
     packages=find_packages(),
     include_package_data=True,
-    install_requires=[
-        'requests'
-        # add your dependencies here
-        # remember to use 'package-name>=x.y.z,<x.y+1.0' notation (this way you get bugfixes)
-    ],
+    install_requires=[],
     extras_require={
         'tests': tests_require,
     },
     entry_points={
         'console_scripts': [
-            # add cli scripts here in this form:
-            'orgwide=orgwide.commands:main',
+            'groupthink=groupthink.commands:main',
         ],
     },
 )

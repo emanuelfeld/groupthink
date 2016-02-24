@@ -8,7 +8,7 @@ usage(){
   	echo "  Options:"
   	echo "  -h, --help            Display this help message"
 	echo -e "\nAvailable subcommands:\n"
-	for sub in ~/.orgwide/${CMD}-cli/bin/*
+	for sub in ~/.groupthink/${CMD}-cli/bin/*
 	do
 		echo "  - $( basename ${sub} )"
 	done
@@ -64,4 +64,4 @@ for var in "$@"; do
 	fi
 done
 
-eval "~/.orgwide/${CMD}-cli/bin/${SUB} ${ARGS}"
+eval "~/.groupthink/${CMD}-cli/bin/${SUB} ${ARGS}"
