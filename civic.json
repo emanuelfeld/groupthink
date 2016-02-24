@@ -1,0 +1,27 @@
+{
+    "name": "groupthink", 
+    "description": "A Python package that lets you install, update, and manage GitHub organization-specific command line scripts", 
+    "license": "CC0-1.0", 
+    "status": "Beta", 
+    "homepage": "", 
+    "repository": "https://github.com/DCgov/groupthink", 
+    "type": "Command Line Tool", 
+    "thumbnail": "", 
+    "geography": [], 
+    "contact": {
+        "name": "Emanuel Feld", 
+        "email": "open@dc.gov", 
+        "url": ""
+    }, 
+    "partners": [
+        {
+            "name": "OCTO Innovation Program", 
+            "email": "open@dc.gov", 
+            "url": ""
+        }
+    ], 
+    "data": [], 
+    "tags": ["git", "cli", "console", "github"], 
+    "links": [], 
+    "id": "https://raw.githubusercontent.com/DCgov/civic.json/master/schemas/schema-v1.json"
+}
