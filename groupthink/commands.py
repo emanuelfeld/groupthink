@@ -17,7 +17,7 @@ def install(org, alias=None, script_dir=script_dir, repo_dir=repo_dir):
     script_exists = os.path.exists('{0}/{1}'.format(script_dir, org))
     if script_exists:
         message = []
-        message.append("A script is already installed with the name {0}.".format(org))
+        message.append("A script is already installed with the name {0}.".format(alias))
         message.append("You can try to install {0}-cli under a different name, with:\n".format(org))
         message.append("  groupthink --install name --alias {0}".format(org))
         return '\n'.join(message)
@@ -50,7 +50,7 @@ def update(org, script_dir=script_dir, repo_dir=repo_dir):
     check_install(org, check_already=True, repo_dir=repo_dir)
     update_cmd = ['git', '--git-dir={0}/{1}-cli/.git'.format(repo_dir, org), 'fetch']
     (msg, err) = execute_cmd(update_cmd)
-    if msg:
+    if msg or err.find('From') == 0:
         return "There are updates to the {0} command. Use the --upgrade subcommand to add them".format(org)
     else:
         return "Your {0} command is already up to date.".format(org)
