@@ -38,7 +38,7 @@ setup(
     ],
     packages=find_packages(),
     include_package_data=True,
-    install_requires=[],
+    install_requires=['argh','requests'],
     test_suite='nose.collector',
     tests_require=['nose-progressive'],
     entry_points={
