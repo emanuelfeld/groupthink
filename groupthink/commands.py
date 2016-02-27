@@ -19,7 +19,7 @@ def install(group, alias=None, dest=dest, storage=storage):
     # install group scripts repository in ~/.groupthink
     # and add groupthink script to /usr/local/bin
     alias = alias if alias else group
-    check_install(alias, check_already=False, storage=storage)
+    check_install(group, check_already=False, storage=storage)
     script_exists = os.path.exists('{0}/{1}'.format(dest, alias))
     if script_exists:
         message = []
@@ -103,9 +103,9 @@ def do_upgrade(group, dest=dest, storage=storage):
         print('Upgraded {} command.'.format(group))
 
 
-@aliases('list')
+@aliases('installed')
 @arg('-s','--storage')
-def installed(storage=storage):
+def list(storage=storage):
     # print out a list of groups whose scripts have been
     # installed to ~/.groupthink
     installed = installed_groups(storage)
@@ -151,7 +151,7 @@ def execute_cmd(cmd):
 
 def main(argv=sys.argv):
     parser = argh.ArghParser()
-    parser.add_commands([install, uninstall, upgrade, update, installed])
+    parser.add_commands([install, uninstall, upgrade, update, list])
     parser.dispatch()
     # parser = argparse.ArgumentParser(prog='groupthink', description='''Install a GitHub group's CLI scripts. Given an
     #     group name, <group>, this package looks for and install the scripts contained in a repository with the name
