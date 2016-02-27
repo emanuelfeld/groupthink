@@ -58,33 +58,49 @@ def uninstall(group, dest=dest, storage=storage):
     return 'Removed {} command.'.format(group)
 
 
-@arg('group', help='The group to update')
+@arg('group', help='The group to update', nargs='?')
 @arg('-d','--dest')
 @arg('-s', '--storage')
 def update(group, dest=dest, storage=storage):
     # check if there are any updates to the scripts repository
+    installed = installed_groups(storage)
+    if group == None:
+        for group in installed:
+            do_update(group, dest, storage)
+    else:
+        do_update(group, dest, storage)
+
+def do_update(group, dest=dest, storage=storage):
     check_install(group, check_already=True, storage=storage)
     update_cmd = ['git', '--git-dir={0}/{1}-cli/.git'.format(storage, group), 'fetch']
     (msg, err) = execute_cmd(update_cmd)
     if msg:
-        return 'There are updates to the {0} command. Use the upgrade subcommand to add them'.format(group)
+        print('There are updates to the {0} command. Use the upgrade subcommand to add them'.format(group))
     else:
-        return 'Your {0} command is already up to date.'.format(group)
+        print('Your {0} command is already up to date.'.format(group))
 
 
-@arg('group', help='The group to upgrade')
+@arg('group', help='The group to upgrade', nargs='?')
 @arg('-d','--dest')
 @arg('-s', '--storage')
 def upgrade(group, dest=dest, storage=storage):
     # upgrade group scripts repository
-
-    check_install(group, check_already=True, storage=storage)
-    update_cmd = ['git', '--git-dir={0}/{1}-cli/.git'.format(storage, group), 'pull']
-    (msg, err) = execute_cmd(update_cmd)
-    if msg.find('Already up-to-date') > -1:
-        return 'Your {0} command is already up to date.'.format(group)
+    installed = installed_groups(storage)
+    if group == None:
+        for group in installed:
+            do_upgrade(group, dest, storage)
     else:
-        return 'Upgraded {} command.'.format(group)
+        do_upgrade(group, dest, storage)
+
+
+def do_upgrade(group, dest=dest, storage=storage):
+    check_install(group, check_already=True, storage=storage)
+    upgrade_cmd = ['git', '--git-dir={0}/{1}-cli/.git'.format(storage, group), 'pull']
+    (msg, err) = execute_cmd(upgrade_cmd)
+    if msg.find('Already up-to-date') > -1:
+        print('Your {0} command is already up to date.'.format(group))
+    else:
+        print('Upgraded {} command.'.format(group))
 
 
 @aliases('list')
@@ -139,7 +155,7 @@ def main(argv=sys.argv):
     parser.dispatch()
     # parser = argparse.ArgumentParser(prog='groupthink', description='''Install a GitHub group's CLI scripts. Given an
     #     group name, <group>, this package looks for and install the scripts contained in a repository with the name
-    #     <org>-cli.''')
+    #     <group>-cli.''')
     # parser.add_argument('--install', '-i', action='store', dest='install', help='Provided a GitHub group name, installs that group's CLI scripts.')
     # parser.add_argument('--uninstall', '-r', action='store', dest='uninstall', help='Removes an group's CLI scripts.')
     # parser.add_argument('--upgrade', '-c', action='store', dest='upgrade', help='Checks if there are updates to an group's installed CLI scripts.')
@@ -155,7 +171,7 @@ def main(argv=sys.argv):
     # elif args.install:
     #     print(install(args.install, args.alias))
     # elif args.list:
-    #     print(list_orgs())
+    #     print(list_groups())
     # elif args.uninstall:
     #     print(uninstall(args.uninstall))
     # elif args.upgrade:
