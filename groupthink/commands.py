@@ -30,13 +30,11 @@ def install(org, alias=None, dest=dest, storage=storage):
         execute_cmd(['mkdir', '-p', dest])
         repo_url = 'https://github.com/{org}/{org}-cli.git'.format(org=org)
         repo_dest = '{storage}/{alias}-cli'.format(storage=storage, alias=alias)
-        print(repo_dest)
         (msg, err) = execute_cmd(['git', 'clone', repo_url, repo_dest])
         if err.find('fatal: ') > -1:
             sys.exit(1)
         groupthink_script = os.path.dirname(os.path.realpath(__file__)) + '/scripts/groupthink-script'
         groupthink_dest = '{dest}/{alias}'.format(dest=dest, alias=alias)
-        print(groupthink_dest)
         execute_cmd(['rm', groupthink_dest])
         execute_cmd(['cp', '-p', groupthink_script, groupthink_dest])
         if org == alias:
