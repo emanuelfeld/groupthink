@@ -23,14 +23,14 @@ else:
 
 
 def setUp():
-    global home, repo_dir
+    global home, storage
     home = os.path.expanduser('~')
-    repo_dir = '{}/.groupthink-test'.format(home)
-    execute_cmd(['mkdir', '-p', repo_dir])
+    storage = '{}/.groupthink-test'.format(home)
+    execute_cmd(['mkdir', '-p', storage])
 
 
 def tearDown():
-    execute_cmd(['rm', '-rf', repo_dir])
+    execute_cmd(['rm', '-rf', storage])
 
 
 def test_has_proper_version():
@@ -38,15 +38,15 @@ def test_has_proper_version():
 
 
 def test_installs():
-    install('dcgov', script_dir=repo_dir, repo_dir=repo_dir)
-    eq_(os.path.exists('{}/dcgov-cli'.format(repo_dir)), True)
-    eq_(os.path.exists('{}/dcgov'.format(repo_dir)), True)
+    install('dcgov', alias='foo', dest=storage, storage=storage)
+    eq_(os.path.exists('{storage}/foo-cli'.format(storage=storage)), True)
+    eq_(os.path.exists('{storage}/foo'.format(storage=storage)), True)
 
 
 def test_installed_orgs():
-    installed = installed_orgs(repo_dir=repo_dir)
-    eq_('dcgov' in installed, True)
-    eq_('18f' in installed, False)
+    installed = installed_orgs(storage=storage)
+    eq_('foo' in installed, True)
+    eq_('dcgov' in installed, False)
 
 
 def test_execute_cmd():
@@ -56,21 +56,21 @@ def test_execute_cmd():
 
 
 def test_update():
-    output = update('dcgov', script_dir=repo_dir, repo_dir=repo_dir)
-    eq_(output, 'Your dcgov command is already up to date.')
+    output = update('foo', dest=storage, storage=storage)
+    eq_(output, 'Your foo command is already up to date.')
 
 
 def test_upgrades():
-    output = upgrade('dcgov', script_dir=repo_dir, repo_dir=repo_dir)
-    eq_(output, 'Your dcgov command is already up to date.')
+    output = upgrade('foo', dest=storage, storage=storage)
+    eq_(output, 'Your foo command is already up to date.')
 
 
 def test_lists():
-    output = list_orgs(repo_dir=repo_dir)
-    eq_(output.find('- dcgov') > -1, True)
+    output = list_orgs(storage=storage)
+    eq_(output.find('- foo') > -1, True)
 
 
 def test_uninstalls():
-    uninstall('dcgov', script_dir=repo_dir, repo_dir=repo_dir)
-    eq_(os.path.exists('{}/dcgov-cli'.format(repo_dir)), False)
-    eq_(os.path.exists('{}/dcgov'.format(repo_dir)), False)
+    uninstall('foo', dest=storage, storage=storage)
+    eq_(os.path.exists('{storage}/foo-cli'.format(storage=storage)), False)
+    eq_(os.path.exists('{storage}/foo'.format(storage=storage)), False)
