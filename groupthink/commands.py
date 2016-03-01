@@ -26,7 +26,7 @@ def install(org, alias=None, dest=dest, storage=storage):
     # install org scripts repository in ~/.groupthink
     # and add groupthink script to /usr/local/bin
     alias = alias if alias else org
-    check_install(org, check_already=False, storage=storage)
+    check_install(alias, check_already=False, storage=storage)
     script_exists = os.path.exists('{dest}/{alias}'.format(dest=dest, alias=alias))
     if script_exists:
         message = []
@@ -77,11 +77,11 @@ def uninstall(org, dest=dest, storage=storage):
 @arg('-s', '--storage')
 def update(org, dest=dest, storage=storage):
     """
-    Checks if there are updates to an org's installed CLI scripts.
+    Checks for updates to an org's installed CLI scripts.
     """
     # check if there are any updates to the scripts repository
-    installed = installed_orgs(storage)
-    if org == None:
+    if not org:
+        installed = installed_orgs(storage)
         for org in installed:
             do_update(org, dest, storage)
     else:
@@ -106,8 +106,8 @@ def upgrade(org, dest=dest, storage=storage):
     Updates an org's installed CLI scripts.
     """
     # upgrade org scripts repository
-    installed = installed_orgs(storage)
-    if org == None:
+    if not org:
+        installed = installed_orgs(storage)
         for org in installed:
             do_upgrade(org, dest, storage)
     else:
@@ -134,6 +134,15 @@ def list_orgs(storage=storage):
     # print out a list of orgs whose scripts have been
     # installed to ~/.groupthink
     installed = installed_orgs(storage)
+    message = []
+    if installed:
+        message.append('You have installed these scripts:\n')
+        for org in installed:
+            message.append('  - {org}'.format(org=org))
+    else:
+        message.append('You haven\'t installed any scripts. Install one with:\n')
+        message.append('  groupthink install <org>')
+    return '\n'.join(message)
 
 
 def installed_orgs(storage=storage):
