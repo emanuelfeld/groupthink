@@ -21,7 +21,7 @@
         }
     ], 
     "data": [], 
-    "tags": ["git", "cli", "console", "github"], 
+    "tags": ["git", "github", "command line", "standard"], 
     "links": [], 
     "id": "https://raw.githubusercontent.com/DCgov/civic.json/master/schemas/schema-v1.json"
 }
