@@ -34,7 +34,7 @@ def tearDown():
 
 
 def test_has_proper_version():
-    eq_(__version__, '0.1.1')
+    eq_(__version__, '0.1.2')
 
 
 def test_installs():
