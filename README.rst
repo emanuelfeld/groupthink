@@ -33,7 +33,7 @@ To sum up the options:
 * :code:`groupthink update <org>` checks for updates made to :code:`<org>`'s scripts
 * :code:`groupthink upgrade <org>` installs all updates made to :code:`<org>`'s scripts
 * :code:`groupthink list` lists all groupthink scripts you have installed for any :code:`<org>`
-* :code:`groupthink install <org> alias <alias>` install the scripts for :code:`<org>` under :code:`<altname>` (if you use this, replace :code:`<org>` with :code:`<altname>` in the options above)
+* :code:`groupthink install <org> --alias <alias>` install the scripts for :code:`<org>` under :code:`<altname>` (if you use this, replace :code:`<org>` with :code:`<altname>` in the options above)
 
 Requirements
 ==============
