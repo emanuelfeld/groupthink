@@ -75,9 +75,9 @@ def update(org, dest=dest):
     if not org:
         installed = installed_orgs(storage)
         for org in installed:
-            do_update(org, dest, storage)
+            print(do_update(org, dest, storage))
     else:
-        do_update(org, dest, storage)
+        print(do_update(org, dest, storage))
 
 
 def do_update(org, dest=dest, storage=storage):
@@ -100,9 +100,9 @@ def upgrade(org, dest=dest):
     if not org:
         installed = installed_orgs(storage)
         for org in installed:
-            do_upgrade(org, dest, storage)
+            print(do_upgrade(org, dest, storage))
     else:
-        do_upgrade(org, dest, storage)
+        print(do_upgrade(org, dest, storage))
 
 
 def do_upgrade(org, dest=dest, storage=storage):
