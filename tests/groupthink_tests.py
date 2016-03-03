@@ -25,12 +25,12 @@ else:
 def setUp():
     global home, storage
     home = os.path.expanduser('~')
-    storage = '{}/.groupthink-test'.format(home)
+    storage = '{}/.groupthink'.format(home)
     execute_cmd(['mkdir', '-p', storage])
 
 
 def tearDown():
-    execute_cmd(['rm', '-rf', storage])
+    pass
 
 
 def test_has_proper_version():
@@ -38,7 +38,8 @@ def test_has_proper_version():
 
 
 def test_installs():
-    install('dcgov', alias='foo', dest=storage, storage=storage)
+    install('dcgov', alias='foo', dest=storage)
+    print(storage)
     eq_(os.path.exists('{storage}/foo-cli'.format(storage=storage)), True)
     eq_(os.path.exists('{storage}/foo'.format(storage=storage)), True)
 
@@ -46,7 +47,6 @@ def test_installs():
 def test_installed_orgs():
     installed = installed_orgs(storage=storage)
     eq_('foo' in installed, True)
-    eq_('dcgov' in installed, False)
 
 
 def test_execute_cmd():
@@ -56,21 +56,21 @@ def test_execute_cmd():
 
 
 def test_update():
-    output = update('foo', dest=storage, storage=storage)
+    output = do_update('foo', dest=storage, storage=storage)
     eq_(output, 'Your foo command is already up to date.')
 
 
 def test_upgrades():
-    output = upgrade('foo', dest=storage, storage=storage)
+    output = do_upgrade('foo', dest=storage, storage=storage)
     eq_(output, 'Your foo command is already up to date.')
 
 
 def test_lists():
-    output = list_orgs(storage=storage)
+    output = list_orgs()
     eq_(output.find('- foo') > -1, True)
 
 
 def test_uninstalls():
-    uninstall('foo', dest=storage, storage=storage)
+    uninstall('foo', dest=storage)
     eq_(os.path.exists('{storage}/foo-cli'.format(storage=storage)), False)
     eq_(os.path.exists('{storage}/foo'.format(storage=storage)), False)

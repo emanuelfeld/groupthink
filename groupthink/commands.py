@@ -15,16 +15,13 @@ else:
     dest = '/usr/local/bin'
 
 
-@arg('org', help='The org to install')
-@arg('-a','--alias', help='Set a different name for this command')
-@arg('-d','--dest')
-@arg('-s', '--storage')
-def install(org, alias=None, dest=dest, storage=storage):
+@arg('org', help='The org command you want to install')
+@arg('-a','--alias', help='Set a name for this command')
+@arg('-d','--dest', help='Choose a directory on your PATH to install this command')
+def install(org, alias=None, dest=dest):
     """
     Provided a GitHub org name, installs that org's CLI scripts.
     """
-    # install org scripts repository in ~/.groupthink
-    # and add groupthink script to /usr/local/bin
     alias = alias if alias else org
     check_install(alias, check_already=False, storage=storage)
     script_exists = os.path.exists('{dest}/{alias}'.format(dest=dest, alias=alias))
@@ -32,7 +29,7 @@ def install(org, alias=None, dest=dest, storage=storage):
         message = []
         message.append('A script is already installed with the name {alias}.'.format(alias=alias))
         message.append('You can try to install {org}-cli under a different name, with:\n'.format(org=org))
-        message.append('  groupthink --install {org} --alias [alias]'.format(org=org))
+        message.append('  groupthink install {org} --alias [alias]'.format(org=org))
         return '\n'.join(message)
     try:
         execute_cmd(['mkdir', '-p', storage])
@@ -40,12 +37,11 @@ def install(org, alias=None, dest=dest, storage=storage):
         repo_url = 'https://github.com/{org}/{org}-cli.git'.format(org=org)
         repo_dest = '{storage}/{alias}-cli'.format(storage=storage, alias=alias)
         if requests.get(repo_url[:-4]).status_code < 400:
-            (msg, err) = execute_cmd(['git', 'clone', repo_url, repo_dest])
+            (out, err) = execute_cmd(['git', 'clone', repo_url, repo_dest])
             if err.find('fatal: ') > -1:
-                # return 'Could not get {org}-cli command. Please make sure https://github.com/{org}/{org}-cli exists.'.format(org=org)
                 sys.exit(1)
         else:
-            return 'Could not get {org}-cli command. Please make sure https://github.com/{org}/{org}-cli exists.'.format(org=org)
+            sys.exit(1)
         groupthink_script = os.path.dirname(os.path.realpath(__file__)) + '/scripts/groupthink-script'
         groupthink_dest = '{dest}/{alias}'.format(dest=dest, alias=alias)
         execute_cmd(['rm', groupthink_dest])
@@ -58,28 +54,24 @@ def install(org, alias=None, dest=dest, storage=storage):
         return 'Could not get {org}-cli command. Please make sure https://github.com/{org}/{org}-cli exists.'.format(org=org)
 
 
-@arg('org', help='The org to uninstall')
-@arg('-d','--dest')
-@arg('-s', '--storage')
-def uninstall(org, dest=dest, storage=storage):
+@arg('org', help='The command to uninstall')
+@arg('-d','--dest', help='The directory where you installed this command')
+def uninstall(org, dest=dest):
     """
     Removes an org's CLI scripts.
     """
-    # remove org scripts repo and groupthink script
     check_install(org, check_already=True, storage=storage)
     execute_cmd(['rm', '-rf', '{storage}/{org}-cli'.format(storage=storage, org=org)])
     execute_cmd(['rm', '{dest}/{org}'.format(dest=dest, org=org)])
     return 'Removed {org} command.'.format(org=org)
 
 
-@arg('org', help='The org to update', nargs='?')
-@arg('-d','--dest')
-@arg('-s', '--storage')
-def update(org, dest=dest, storage=storage):
+@arg('org', help='The command to update. Leave empty to update all commands.', nargs='?')
+@arg('-d','--dest', help='The directory where you installed the command(s)')
+def update(org, dest=dest):
     """
     Checks for updates to an org's installed CLI scripts.
     """
-    # check if there are any updates to the scripts repository
     if not org:
         installed = installed_orgs(storage)
         for org in installed:
@@ -89,23 +81,22 @@ def update(org, dest=dest, storage=storage):
 
 
 def do_update(org, dest=dest, storage=storage):
+    # check for updates for a given command's cli repo with a git fetch
     check_install(org, check_already=True, storage=storage)
     update_cmd = ['git', '--git-dir={storage}/{org}-cli/.git'.format(storage=storage, org=org), 'fetch']
-    (msg, err) = execute_cmd(update_cmd)
-    if msg or err.find('From') == 0:
-        return 'There are updates to the {org} command. Use the --upgrade subcommand to add them'.format(org=org)
+    (out, err) = execute_cmd(update_cmd)
+    if out or err.find('From') == 0:
+        return 'There are updates to the {org} command. Use the upgrade subcommand to add them'.format(org=org)
     else:
         return 'Your {org} command is already up to date.'.format(org=org)
 
 
-@arg('org', help='The org to upgrade', nargs='?')
-@arg('-d','--dest')
-@arg('-s', '--storage')
-def upgrade(org, dest=dest, storage=storage):
+@arg('org', help='The command to upgrade. Leave empty to upgrade all commands.', nargs='?')
+@arg('-d','--dest', help='The directory where you installed the command(s)')
+def upgrade(org, dest=dest):
     """
-    Updates an org's installed CLI scripts.
+    Upgrades an org's installed CLI scripts.
     """
-    # upgrade org scripts repository
     if not org:
         installed = installed_orgs(storage)
         for org in installed:
@@ -115,10 +106,11 @@ def upgrade(org, dest=dest, storage=storage):
 
 
 def do_upgrade(org, dest=dest, storage=storage):
+    # upgrade a given command's cli repo with a git pull
     check_install(org, check_already=True, storage=storage)
     upgrade_cmd = ['git', '--git-dir={storage}/{org}-cli/.git'.format(storage=storage, org=org), 'pull']
-    (msg, err) = execute_cmd(upgrade_cmd)
-    if msg.find('Already up-to-date') > -1:
+    (out, err) = execute_cmd(upgrade_cmd)
+    if out.find('Already up-to-date') > -1:
         return 'Your {org} command is already up to date.'.format(org=org)
     else:
         return 'Upgraded {org} command.'.format(org=org)
@@ -126,13 +118,10 @@ def do_upgrade(org, dest=dest, storage=storage):
 
 @aliases('installed')
 @named('list')
-@arg('-s','--storage')
-def list_orgs(storage=storage):
+def list_orgs():
     """
     Lists all org CLI scripts you have installed.
     """
-    # print out a list of orgs whose scripts have been
-    # installed to ~/.groupthink
     installed = installed_orgs(storage)
     message = []
     if installed:
@@ -162,11 +151,11 @@ def check_install(org, check_already=True, storage=storage):
     installed = org in installed_orgs(storage)
     if not installed and check_already:
         print('Error: {org} command not installed. You can try to install it with:\n'.format(org=org))
-        print('  groupthink --install {org}'.format(org=org))
+        print('  groupthink install {org}'.format(org=org))
         sys.exit(1)
     elif installed and not check_already:
         print('Error: {org} command already installed. You can check for updates with:\n'.format(org=org))
-        print('  groupthink --update {org}'.format(org=org))
+        print('  groupthink update {org}'.format(org=org))
         sys.exit(1)
 
 
