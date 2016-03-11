@@ -2,6 +2,9 @@
 groupthink
 =============
 
+.. image:: https://img.shields.io/pypi/v/groupthink.svg
+    :target: https://pypi.python.org/pypi/groupthink
+
 The groupthink package helps you install, update, and manage GitHub organization-specific command line scripts. Let's say your organization is called :code:`foo`.
 
 Running :code:`groupthink install foo` looks for a repository at :code:`https://github.com/foo/foo-cli`. If it finds one, it installs to the :code:`foo-cli` directory within :code:`~/.groupthink`. Like this:
