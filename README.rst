@@ -2,6 +2,9 @@
 groupthink
 =============
 
+.. image:: https://travis-ci.org/emanuelfeld/groupthink.svg?branch=master
+    :target: https://travis-ci.org/emanuelfeld/groupthink
+
 .. image:: https://img.shields.io/pypi/v/groupthink.svg
     :target: https://pypi.python.org/pypi/groupthink
 
