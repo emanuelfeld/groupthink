@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # This file is part of groupthink.
-# https://github.com/dcgov/groupthink
+# https://github.com/emanuelfeld/groupthink
 
 # This project is in the public domain within the United States.
 # Additionally, the Government of the District of Columbia waives

@@ -1,11 +1,14 @@
+# -*- codes: utf-8 -*-
+
+from __future__ import print_function
+
 import subprocess
 import os
 import sys
-import argparse
-import argh
-import requests
-from argh import arg, aliases, named
 from glob import glob
+
+import requests
+from argh import arg, aliases, named, ArghParser
 
 home = os.path.expanduser('~')
 storage = '{home}/.groupthink'.format(home=home)
@@ -16,8 +19,8 @@ else:
 
 
 @arg('org', help='The org command you want to install')
-@arg('-a','--alias', help='Set a name for this command')
-@arg('-d','--dest', help='Choose a directory on your PATH to install this command')
+@arg('-a', '--alias', help='Set a name for this command')
+@arg('-d', '--dest', help='Choose a directory on your PATH to install this command')
 def install(org, alias=None, dest=dest):
     """
     Provided a GitHub org name, installs that org's CLI scripts.
@@ -55,7 +58,7 @@ def install(org, alias=None, dest=dest):
 
 
 @arg('org', help='The command to uninstall')
-@arg('-d','--dest', help='The directory where you installed this command')
+@arg('-d', '--dest', help='The directory where you installed this command')
 def uninstall(org, dest=dest):
     """
     Removes an org's CLI scripts.
@@ -67,7 +70,7 @@ def uninstall(org, dest=dest):
 
 
 @arg('org', help='The command to update. Leave empty to update all commands.', nargs='?')
-@arg('-d','--dest', help='The directory where you installed the command(s)')
+@arg('-d', '--dest', help='The directory where you installed the command(s)')
 def update(org, dest=dest):
     """
     Checks for updates to an org's installed CLI scripts.
@@ -81,7 +84,9 @@ def update(org, dest=dest):
 
 
 def do_update(org, dest=dest, storage=storage):
-    # check for updates for a given command's cli repo with a git fetch
+    """
+    Checks for updates for a given command's cli repo with a git fetch
+    """
     check_install(org, check_already=True, storage=storage)
     update_cmd = ['git', '--git-dir={storage}/{org}-cli/.git'.format(storage=storage, org=org), 'fetch']
     (out, err) = execute_cmd(update_cmd)
@@ -92,7 +97,7 @@ def do_update(org, dest=dest, storage=storage):
 
 
 @arg('org', help='The command to upgrade. Leave empty to upgrade all commands.', nargs='?')
-@arg('-d','--dest', help='The directory where you installed the command(s)')
+@arg('-d', '--dest', help='The directory where you installed the command(s)')
 def upgrade(org, dest=dest):
     """
     Upgrades an org's installed CLI scripts.
@@ -106,7 +111,9 @@ def upgrade(org, dest=dest):
 
 
 def do_upgrade(org, dest=dest, storage=storage):
-    # upgrade a given command's cli repo with a git pull
+    """
+    Upgrades a given command's cli repo with a git pull
+    """
     check_install(org, check_already=True, storage=storage)
     upgrade_cmd = ['git', '--git-dir={storage}/{org}-cli/.git'.format(storage=storage, org=org), 'pull']
     (out, err) = execute_cmd(upgrade_cmd)
@@ -135,8 +142,10 @@ def list_orgs():
 
 
 def installed_orgs(storage=storage):
-    # return a list of organization whose scripts have been installed
-    # to ~/.groupthink
+    """
+    Returns a list of organization whose scripts have been installed
+    to ~/.groupthink
+    """
     installed = []
     for org in glob('{}/*/'.format(storage)):
         org_path = os.path.normpath(org)
@@ -147,7 +156,9 @@ def installed_orgs(storage=storage):
 
 
 def check_install(org, check_already=True, storage=storage):
-    # check if org-cli repo already installed in ~/.groupthink
+    """
+    Checks if org-cli repo already installed in ~/.groupthink
+    """
     installed = org in installed_orgs(storage)
     if not installed and check_already:
         print('Error: {org} command not installed. You can try to install it with:\n'.format(org=org))
@@ -164,7 +175,7 @@ def execute_cmd(cmd):
     return popen.communicate()
 
 
-def main(argv=sys.argv):
-    parser = argh.ArghParser( description='Install a GitHub org\'s set of CLI tools, as defined at https://github.com/<org>/<org>-cli')
+def main():
+    parser = ArghParser(description='Install a GitHub org\'s set of CLI tools, as defined at https://github.com/<org>/<org>-cli')
     parser.add_commands([install, uninstall, upgrade, update, list_orgs])
     parser.dispatch()

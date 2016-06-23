@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # This file is part of groupthink.
-# https://github.com/dcgov/groupthink
+# https://github.com/emanuelfeld/groupthink
 
 # This project is in the public domain within the United States.
 # Additionally, the Government of the District of Columbia waives
@@ -24,7 +24,7 @@ setup(
     keywords='git cli console github',
     author='Emanuel Feld',
     author_email='elefbet@gmail.com',
-    url='https://github.com/dcgov/groupthink',
+    url='https://github.com/emanuelfeld/groupthink',
     license='CC0-1.0',
     classifiers=[
         'Development Status :: 4 - Beta',

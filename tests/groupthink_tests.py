@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # This file is part of groupthink.
-# https://github.com/dcgov/groupthink
+# https://github.com/emanuelfeld/groupthink
 
 # This project is in the public domain within the United States.
 # Additionally, the Government of the District of Columbia waives
@@ -34,7 +34,7 @@ def tearDown():
 
 
 def test_has_proper_version():
-    eq_(__version__, '0.1.2')
+    eq_(__version__, '1.0.0')
 
 
 def test_installs():
